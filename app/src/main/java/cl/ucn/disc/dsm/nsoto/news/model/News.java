@@ -10,7 +10,11 @@
 
 package cl.ucn.disc.dsm.nsoto.news.model;
 
+import net.openhft.hashing.LongHashFunction;
+
 import org.threeten.bp.ZonedDateTime;
+
+import cl.ucn.disc.dsm.nsoto.news.utils.Validation;
 
 /**
  * The Domain model: News.
@@ -68,7 +72,6 @@ public class News {
     /**
      * The Constructor.
      *
-     * @param id
      * @param title
      * @param source
      * @param author
@@ -78,15 +81,33 @@ public class News {
      * @param content
      * @param publishedAt
      */
-    public News(Long id, String title, String source, String author, String url, String urlImage, String description, String content, ZonedDateTime publishedAt) {
-        this.id = id;
+    public News(String title, String source, String author, String url, String urlImage, String description, String content, ZonedDateTime publishedAt) {
+
+        // Validacion de title
+        Validation.minSize(title, 2, "title");
+
         this.title = title;
+
+        // Validacion de source
+        Validation.minSize(source, 2, "source");
         this.source = source;
+
+        // Validacion de author
+        Validation.minSize(author, 2, "author");
         this.author = author;
+
+        // Apply the xxHash function
+        this.id = LongHashFunction.xx()
+                .hashChars(title + "|" + source + "|" + author);
+
         this.url = url;
         this.urlImage = urlImage;
         this.description = description;
+
+        Validation.notNull(content, "content");
         this.content = content;
+
+        Validation.notNull(publishedAt, "publishedAt");
         this.publishedAt = publishedAt;
     }
 
