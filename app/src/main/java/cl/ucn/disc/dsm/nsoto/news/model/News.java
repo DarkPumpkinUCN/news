@@ -100,8 +100,11 @@ public class News {
         this.id = LongHashFunction.xx()
                 .hashChars(title + "|" + source + "|" + author);
 
+        //Can't be null
         this.url = url;
         this.urlImage = urlImage;
+
+        Validation.minSize(description, 10, "description");
         this.description = description;
 
         Validation.notNull(content, "content");
