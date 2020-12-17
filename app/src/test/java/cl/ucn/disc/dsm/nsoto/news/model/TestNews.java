@@ -10,15 +10,143 @@
 
 package cl.ucn.disc.dsm.nsoto.news.model;
 
-import com.github.javafaker.Faker;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
-public class TestNews {
+
+ /**
+  * Testing of News.
+  *
+  * @author Nicolae Soto Maldonado.
+  */
+ public final class TestNews {
+
+     /**
+ 	* The Logger
+ 	*/
+     private static final Logger log = LoggerFactory.getLogger(TestNews.class);
+     /**
+ 	* Testing the constructor
+ 	*/
+     @Test
+     public void testContructor() {
+        	log.debug("Testing ..");
+        	// all data ok
+        	News news = new News(
+                	"The Title",
+                	"The Source",
+                	"The Author",
+                	"The URL",
+                	"The URL Image",
+                	"The Description",
+                	"The Content",
+                	ZonedDateTime.now(ZoneId.of("-3")) 	);
+
+        	log.debug("The id: {}.", news.getId());
+        	Assertions.assertEquals(1182003507361219134L, news.getId(), "Wrong id !");
+        	log.debug("Title null ..");
+
+        	Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            	new News(
+                    	null,
+                    	"The Source",
+                    	"The Author",
+                    	"The URL",
+                    	"The URL Image",
+                    	"The Description",
+                    	"The Content",
+                    	ZonedDateTime.now(ZoneId.of("-3")) 	);
+
+            	});
+
+        	log.debug("Source null ..");
+        	Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            	new News(
+                        "The Title",
+                        null,
+                        "The Author",
+                        "The URL",
+                        "The URL Image",
+                        "The Description",
+                        "The Content",
+                        ZonedDateTime.now(ZoneId.of("-3"))
+
+                    	);
+
+            	});
+
+
+        	log.debug("Author null ..");
+        	Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            	new News(
+                    	"The Title",
+                    	"The Source",
+                    	null,
+                    "The URL",
+                    	"The URL Image",
+                    	"The Description",
+                    	"The Content",
+                    	ZonedDateTime.now(ZoneId.of("-3")) 	);
+
+            	});
+
+        	log.debug("Description null ..");
+        	Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            	new News(
+                    	"The Title",
+                    	"The Source",
+                    	"The Author",
+                    	"The URL",
+                    	"The URL Image",
+                    	null,
+                    	"The Content",
+                    	ZonedDateTime.now(ZoneId.of("-3")) 	);
+
+            	});
+
+        	log.debug("Content null ..");
+        	Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            	new News(
+                    	"The Title",
+                    	"The Source",
+                    	"The Author",
+                    	"The URL",
+                    	"The URL Image",
+                    	"The Description",
+                    	null,
+                    	ZonedDateTime.now(ZoneId.of("-3")) 	);
+
+            	});
+
+        	log.debug("PublishedAt null ..");
+        	Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    	"The Title",
+                    	"The Source",
+                    	"The Author",
+                    	"The URL",
+                    	"The URL Image",
+                    	"The Description",
+                    	"The Content",
+                    	null
+            	);
+
+        	});
+
+
+        	log.debug(".. Done!");
+        }
+}
+
+
+
+
+
+/*public class TestNews {
 
     private static final Logger log = LoggerFactory.getLogger(News.class);
 
@@ -27,7 +155,6 @@ public class TestNews {
         final Faker faker = Faker.instance();
 
         News tNews = new News(
-                Integer.toUnsignedLong(1),
                 faker.book().title(),
                 faker.name().username(),
                 faker.name().fullName(),
@@ -42,4 +169,4 @@ public class TestNews {
                 "\n" + tNews.getUrl() + "\n" + tNews.getUrlImage() + "\n" + tNews.getPublishedAt());
 
     }
-}
+}*/
