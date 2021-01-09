@@ -18,7 +18,7 @@ import cl.ucn.disc.dsm.nsoto.news.model.News;
 /**
  * @author Nicolae Soto Maldonado
  */
-public class ContractsImple implements Contracts {
+public class ContractsImpl implements Contracts {
     /**
      * Get the list of News.
      *
