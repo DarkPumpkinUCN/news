@@ -39,7 +39,7 @@ public class TestContractsImpl {
         log.debug("Testing...");
 
         // The implementation
-        Contracts contracts = new ContractsImple();
+        Contracts contracts = new ContractsImpl();
 
         // Call the method
         List<News> news = contracts.retrieveNews(5);
