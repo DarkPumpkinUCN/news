@@ -19,12 +19,21 @@
 
 package cl.ucn.disc.dsm.nsoto.news;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import java.util.List;
+
+import cl.ucn.disc.dsm.nsoto.news.model.News;
+import cl.ucn.disc.dsm.nsoto.news.services.Contracts;
+import cl.ucn.disc.dsm.nsoto.news.services.ContractsImplNewsApi;
 
 /**
  * The Main Class.
@@ -33,6 +42,11 @@ import androidx.appcompat.app.AppCompatDelegate;
  */
 
 public class MainActivity extends AppCompatActivity {
+
+    /**
+     * The ListView.
+     */
+    protected ListView listView;
 
     /***
      * OnCreate.
@@ -43,6 +57,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.listView = findViewById(R.id.am_lv_news);
+
+        // Get the news in the background thread
+        AsyncTask.execute(() -> {
+
+            // Using the contracts to get the news ..
+            Contracts contracts = new ContractsImplNewsApi("884bbd5634024b61a278583191d000df");
+
+            // Get the News from NewsApi (internet!)
+            List<News> listNews = contracts.retrieveNews(30);
+
+            // Build the simple adapter to show the list of news (String!)
+            ArrayAdapter<String> adapter = new ArrayAdapter(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    listNews
+            );
+
+            // Set the adapter!
+            runOnUiThread(() -> {
+                this.listView.setAdapter(adapter);
+            });
+
+        });
     }
 
     /**
