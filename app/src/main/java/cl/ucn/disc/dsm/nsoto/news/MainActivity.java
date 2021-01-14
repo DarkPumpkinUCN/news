@@ -23,14 +23,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.adapters.ModelAdapter;
 
 import java.util.List;
 
+import cl.ucn.disc.dsm.nsoto.news.activities.NewsItem;
 import cl.ucn.disc.dsm.nsoto.news.model.News;
 import cl.ucn.disc.dsm.nsoto.news.services.Contracts;
 import cl.ucn.disc.dsm.nsoto.news.services.ContractsImplNewsApi;
@@ -48,41 +54,62 @@ public class MainActivity extends AppCompatActivity {
      */
     protected ListView listView;
 
-    /***
-     * OnCreate.
-     *
-     * @param savedInstanceState used to reload the app.
+    /**
+     * On create
+     * @param savedInstanceState used to realod the app
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.listView = findViewById(R.id.am_lv_news);
+        //the toolbar
+        this.setSupportActionBar(findViewById(R.id.am_t_toolbar));
 
-        // Get the news in the background thread
-        AsyncTask.execute(() -> {
+        //the fast adapter
+        ModelAdapter<News, NewsItem> newsAdapter = new ModelAdapter<>(NewsItem::new);
+        FastAdapter<NewsItem> fastAdapter = FastAdapter.with(newsAdapter);
+        fastAdapter.withSelectable(false);
 
-            // Using the contracts to get the news ..
+        //the recycling view.
+        RecyclerView recyclerView = findViewById(R.id.am_rv_news);
+        recyclerView.setAdapter(fastAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
+
+
+        //remove this line
+        //this.listView = findViewById(R.id.am_lv_news);
+        //estoy aqui
+
+        //Get the the news Async.
+        AsyncTask.execute(() ->{
+
+            // using the contracts to get the news..
             Contracts contracts = new ContractsImplNewsApi("884bbd5634024b61a278583191d000df");
 
-            // Get the News from NewsApi (internet!)
+
+
+            //get the News from NewsApi(internet).
             List<News> listNews = contracts.retrieveNews(30);
 
-            // Build the simple adapter to show the list of news (String!)
-            ArrayAdapter<String> adapter = new ArrayAdapter(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    listNews
-            );
+            //DELETE THIS SCOPE IN THE FUTURE
+            //adapter to show the list of news.
+            //ArrayAdapter<String> adapter = new ArrayAdapter(
+            //      this, android.R.layout.simple_list_item_1,listNews
+            //);
 
-            // Set the adapter!
-            runOnUiThread(() -> {
-                this.listView.setAdapter(adapter);
+            //set the adapter!
+            runOnUiThread(()->{
+                newsAdapter.add(listNews);
+
             });
 
         });
+
     }
+
 
     /**
      * Initialize the contents of the Activity's standard options menu.  You
