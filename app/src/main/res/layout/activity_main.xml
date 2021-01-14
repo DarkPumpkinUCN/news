@@ -34,7 +34,6 @@
         android:layout_height="match_parent"
         tools:ignore="MissingClass">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/am_rv_news"
             android:layout_width="match_parent"
